@@ -14,7 +14,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        $model=Task::all();
+        return response()->json([
+            'data'=>$model
+        ]);
     }
 
     /**
@@ -35,7 +38,19 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request,[
+             'title'=>'required|string|max:191',
+             'prior'=>'required'
+        ]);
+        $model=Task::create([
+            'title'=>$request->title,
+            'prior'=>$request->prior,
+            'user_id'=>$request->user_id,
+        ]);
+        return response()->json([
+            'data'=>$model,
+            'message'=>'Success'
+        ],201);
     }
 
     /**
