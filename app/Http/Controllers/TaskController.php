@@ -84,7 +84,19 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        $this->validate($request,[
+            'title'=>'required|string|max:191',
+            'prior'=>'required'
+       ]);
+       $task->title   = $request->title;
+       $task->prior   = $request->prior;
+       $task->user_id = $request->user_id;
+
+       $task->save();
+       return response()->json([
+           'data'=>$task,
+           'message'=>'success'
+       ], 201);
     }
 
     /**
@@ -95,6 +107,9 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+        return response()->json([
+            'message'=>'success'
+        ],200);
     }
 }
