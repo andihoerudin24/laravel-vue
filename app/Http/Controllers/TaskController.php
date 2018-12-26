@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Task;
 use Illuminate\Http\Request;
+use App\Http\Resources\TaskResource;
 
 class TaskController extends Controller
 {
@@ -14,10 +15,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $model=Task::all();
-        return response()->json([
-            'data'=>$model
-        ]);
+        $model=Task::paginate(5);
+        return TaskResource::collection($model);
     }
 
     /**
@@ -45,7 +44,7 @@ class TaskController extends Controller
         $model=Task::create([
             'title'=>$request->title,
             'prior'=>$request->prior,
-            'user_id'=>$request->user_id,
+            'user_id'=>$request->user()->id,
         ]);
         return response()->json([
             'data'=>$model,
@@ -90,7 +89,7 @@ class TaskController extends Controller
        ]);
        $task->title   = $request->title;
        $task->prior   = $request->prior;
-       $task->user_id = $request->user_id;
+       $task->user_id = $request->user()->id;
 
        $task->save();
        return response()->json([
